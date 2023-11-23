@@ -36,6 +36,13 @@ def name_key(t):
 
 
 tag_value_descriptions = {
+    # Side
+    54 : {
+        "0": "None",
+        "1": "Buy",
+        "2": "Sell",
+    },
+    # MsgType
     35: {
         "0": "Heartbeat",
         "1": "Test Request",
@@ -62,7 +69,26 @@ tag_value_descriptions = {
         "h": "Trading Session Status",
         "i": "Mass Quote",
         "j": "Business Message Reject",
-    }
+        "AI": "Quote Status Report",
+    },
+    # OrdStatus
+    39: {
+        "0" : "New",
+        "1" : "Partially filled",
+        "2" : "Filled",
+        "3" : "Done for day",
+        "4" : "Canceled",
+        "5" : "Replaced",
+        "6" : "Pending Cancel",
+        "7" : "Stopped",
+        "8" : "Rejected",
+        "9" : "Suspended",
+        "A" : "Pending New",
+        "B" : "Calculated",
+        "C" : "Expired",
+        "D" : "Accepted for bidding",
+        "E" : "Pending Replace",
+    },
 }
 
 
@@ -71,7 +97,6 @@ def describe_field(key, val):
         key_desc = tag_value_descriptions[key]
         if val in key_desc:
             return "(" + key_desc[val] + ")"
-
     return ""
 
 
