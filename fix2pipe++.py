@@ -3,7 +3,7 @@
 import re, sys, argparse
 from util import *
 
-# from validate_rfq import *
+from validate_rfq import *
 
 
 def parse_tags_file(tags_filename):
@@ -53,11 +53,13 @@ tag_value_descriptions = {
         "9": "Order Cancel Reject",
         "A": "Logon",
         "D": "New Order Single",
+        "AB": "New Order Multileg",
         "F": "Order Cancel Request",
         "G": "Order Cancel/Repalce Request",
         "Q": "Dont Know Trade",
         "R": "Quote Request",
         "S": "Quote",
+        "V": "Market Data Request",
         "W": "Market Data Snapshot",
         "X": "Market Data Incremental",
         "Y": "Market Data Request Reject",
@@ -89,6 +91,35 @@ tag_value_descriptions = {
         "D" : "Accepted for bidding",
         "E" : "Pending Replace",
     },
+    # OrdType
+    40: {
+        "1" : "Market",
+        "2" : "Limit",
+        "3" : "Stop",
+        "4" : "Stop limit",
+        "D" : "Previously quoted",
+    },
+    # QuoteStatus
+    297: {
+        "0" : "Accepted",
+        "1" : "Canceled for Symbol",
+        "4" : "Canceled All",
+        "5" : "Rejected",
+        "7" : "Expired",
+    },
+    # QuoteCancelType
+    298: {
+        "1" : "Cancel for Symbol",
+        "4" : "Cancel All Quotes",
+    },
+    # TradSesStatus
+    340: {
+        "1" : "Halted",
+        "2" : "Open",
+        "3" : "Closed",
+        "4" : "Pre-Open",
+        "5" : "Pre-Close",
+    },
 }
 
 
@@ -108,20 +139,28 @@ def print_fix_msg(msg_map, tags_map, direction, sort_by):
             name = tags_map[key]
         msg_fields.append((key, name, value))
 
-    # validate_msg(msg_map, tags_map, direction)
+    validate_msg(msg_map, tags_map, direction)
 
     if sort_by == "name" and not tags_map is None:
         msg_fields.sort(key=name_key)
     else:
         msg_fields.sort(key=tag_key)
 
+    if direction == "incoming":
+        color_str = colors.GREEN
+    else:
+        color_str = colors.BLUE
+
     for key, name, value in msg_fields:
-        if direction == "incoming":
-            color_str = colors.GREEN
+        description = ""
+        if len(value) == 1:
+            value_str = str(value[0])
+            description = describe_field(key, value_str)
         else:
-            color_str = colors.BLUE
+            value_str = '[' + ', '.join(value)  + ']'
+
         output = "{0:6} {1:28} {2} {3}".format(
-            key, name, value, describe_field(key, value)
+            key, name, value_str, description
         )
         print(color_str + output + colors.ENDCOLOR)
 
@@ -129,7 +168,7 @@ def print_fix_msg(msg_map, tags_map, direction, sort_by):
     # for key, name, value in msg_fields:
     #     if name in ["MsgType", "CheckSum", "BeginString", "BodyLength", "MsgSeqNum", "SendingTime", "SenderCompId", "TargetCompId", "TransactTime", "SenderSubId"]:
     #         continue
-    #     print("BOOST_CHECK_EQUAL(lex.find(Tag::{0}).first, \"{1}\");".format(name, value))
+    #     print("BOOST_CHECK_EQUAL(lex.find(Tag::{0}).first, \"{1}\");".format(name, value[0]))
 
 
 def parse_fix_msg(msg, tags_map, direction, sort_by):
@@ -140,12 +179,14 @@ def parse_fix_msg(msg, tags_map, direction, sort_by):
             tag_value = field.split("=")
             tag = int(tag_value[0])
             value = tag_value[1].strip(" ,\x01")
-            if direction == "outgoing " and tag in msg_map:
-                tag_name = ""
-                if tag in tags_map:
-                    tag_name = tags_map[tag]
-                print_warning("Duplicated tag {0}<{1}>".format(tag_name, tag))
-            msg_map[tag] = value
+            # if direction == "outgoing " and tag in msg_map:
+            #     tag_name = ""
+            #     if tag in tags_map:
+            #         tag_name = tags_map[tag]
+            #     print_warning("Duplicated tag {0}<{1}>".format(tag_name, tag))
+            if not tag in msg_map:
+                msg_map[tag] = []
+            msg_map[tag].append(value)
 
     print_fix_msg(msg_map, tags_map, direction, sort_by)
 
