@@ -139,7 +139,7 @@ def print_fix_msg(msg_map, tags_map, direction, sort_by):
             name = tags_map[key]
         msg_fields.append((key, name, value))
 
-    validate_msg(msg_map, tags_map, direction)
+    #validate_msg(msg_map, tags_map, direction)
 
     if sort_by == "name" and not tags_map is None:
         msg_fields.sort(key=name_key)
