@@ -46,6 +46,7 @@ tag_value_descriptions = {
     35: {
         "0": "Heartbeat",
         "1": "Test Request",
+        "2": "Resend Request",
         "3": "Reject",
         "4": "Sequence Reset",
         "5": "Logout",
@@ -55,7 +56,7 @@ tag_value_descriptions = {
         "D": "New Order Single",
         "AB": "New Order Multileg",
         "F": "Order Cancel Request",
-        "G": "Order Cancel/Repalce Request",
+        "G": "Order Cancel/Replace Request",
         "Q": "Dont Know Trade",
         "R": "Quote Request",
         "S": "Quote",
@@ -73,12 +74,26 @@ tag_value_descriptions = {
         "j": "Business Message Reject",
         "AI": "Quote Status Report",
     },
+    # ExecType
+    150: {
+        "0": "New",
+        "2": "Filled",
+        "3": "Done For Day",
+        "4": "Canceled",
+        "5": "Replaced",
+        "8": "Rejected",
+        "9": "Suspended",
+        "A": "Pending New",
+        "B": "Calculated",
+        "C": "Expired",
+        "F": "Trade",
+    },
     # OrdStatus
     39: {
         "0" : "New",
-        "1" : "Partially filled",
+        "1" : "Partially Filled",
         "2" : "Filled",
-        "3" : "Done for day",
+        "3" : "Done For Day",
         "4" : "Canceled",
         "5" : "Replaced",
         "6" : "Pending Cancel",
@@ -88,7 +103,7 @@ tag_value_descriptions = {
         "A" : "Pending New",
         "B" : "Calculated",
         "C" : "Expired",
-        "D" : "Accepted for bidding",
+        "D" : "Accepted For Bidding",
         "E" : "Pending Replace",
     },
     # OrdType
@@ -96,8 +111,8 @@ tag_value_descriptions = {
         "1" : "Market",
         "2" : "Limit",
         "3" : "Stop",
-        "4" : "Stop limit",
-        "D" : "Previously quoted",
+        "4" : "Stop Limit",
+        "D" : "Previously Quoted",
     },
     # QuoteStatus
     297: {

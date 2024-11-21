@@ -226,3 +226,26 @@ def validate_msg(msg, tags_map, direction):
         validate_to_crossfire_quote(msg, tags_map)
     if direction == "outgoing" and msg[35] == '8':
         validate_to_crossfire_exec_report(msg, tags_map)
+
+
+class sanity_checker:
+
+    class quote:
+        def __init__(self):
+            self.bid_fwd_pts = 0
+            self.offer_fwd_pts = 0
+            self.bid_far_fwd_pts = 0
+            self.offer_far_fwd_pts = 0
+
+
+    def __init__(self):
+        self.outgoing_quotes = []
+
+    def on_outgoing_quote(msg):
+        if msg[167] != 'SWAP':
+            return
+        quote = quote()
+        
+
+    def on_incoming_exec_report():
+        pass
